@@ -1,8 +1,8 @@
 # encoding: utf-8
+require 'set'
 require 'state'
 
 describe State do
-  
   before(:each) do
     @state = State.new ['a', 'b']
   end
