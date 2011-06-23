@@ -16,14 +16,12 @@ describe State do
 
   describe "when assigning transitions" do
     it "should raise an exception if given a symbol that doesn't belong to its alphabet" do
-      lambda { @state.change_transition('c', @state) }.should
-        raise_error RuntimeError, "Symbol 'c' not in state's alphabet"
+      lambda { @state.change_transition('c', @state) }.should raise_error RuntimeError, "Symbol 'c' not in state's alphabet"
     end
     
     it "should raise an exception if given a state that has a different alphabet" do
       state_two = State.new ['a', 'b', 'c']
-      lambda { @state.change_transition('a', state_two) }.should
-        raise_error RuntimeError, "States have uncompatible alphabets"
+      lambda { @state.change_transition('a', state_two) }.should raise_error RuntimeError, "States have uncompatible alphabets"
     end
     
     it "should successfully change transitions on valid arguments" do
