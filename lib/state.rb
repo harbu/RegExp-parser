@@ -4,9 +4,7 @@ class State
   def initialize(alphabet)
     @alphabet = Set.new(alphabet)
     @transitions = {}
-    alphabet.each do |symbol|
-      @transitions[symbol] = self
-    end
+    alphabet.each {|symbol| @transitions[symbol] = self }
   end
   
   def transition(symbol)
@@ -14,21 +12,17 @@ class State
   end
   
   def change_transition(symbol, new_state)
-    if incompatible_symbol?(symbol)
-      raise "Symbol '#{symbol}' not in state's alphabet"
-    elsif incompatible_state?(new_state)
-      raise "States have uncompatible alphabets"
-    else
-      @transitions[symbol] = new_state
-    end
+    raise "Symbol not in state's alphabet" unless compatible_symbol?(symbol)
+    raise "States have uncompatible alphabets" unless compatible_state?(new_state)
+    @transitions[symbol] = new_state
   end
   
-  def incompatible_symbol?(symbol)
-    !@alphabet.include?(symbol)
+  def compatible_symbol?(symbol)
+    @alphabet.include?(symbol)
   end
   
-  def incompatible_state?(other)
-    self.alphabet != other.alphabet
+  def compatible_state?(other)
+    self.alphabet == other.alphabet
   end
 
 protected

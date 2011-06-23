@@ -38,7 +38,7 @@ describe FiniteAutomaton do
     
     it "should create one that inherits its alphabet from the automaton" do
       state = @automaton.add_state
-      state.incompatible_state?(State.new('a'..'z')).should_not
+      state.compatible_state?(State.new('a'..'z')).should
     end
   end
   

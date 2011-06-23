@@ -16,7 +16,7 @@ describe State do
 
   describe "when assigning transitions" do
     it "should raise an exception if given a symbol that doesn't belong to its alphabet" do
-      lambda { @state.change_transition('c', @state) }.should raise_error RuntimeError, "Symbol 'c' not in state's alphabet"
+      lambda { @state.change_transition('c', @state) }.should raise_error RuntimeError, "Symbol not in state's alphabet"
     end
     
     it "should raise an exception if given a state that has a different alphabet" do

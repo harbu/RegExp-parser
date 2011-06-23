@@ -16,18 +16,12 @@ class FiniteAutomaton
   
   def add_state
     @states << State.new(@alphabet)
-    if @start_state.nil?
-      @start_state = @states.last
-    else
-      @states.last
-    end
+    @start_state ||= @states.last
+    @states.last
   end
   
   def start_state=(state)
-    if !@states.include?(state)
-      raise "state not present in automaton"
-    else
-      @start_state = state
-    end
+    raise "state not present in automaton" unless @states.include?(state)
+    @start_state = state
   end
 end
