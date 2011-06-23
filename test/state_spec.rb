@@ -1,10 +1,11 @@
 # encoding: utf-8
+
 require 'set'
 require 'state'
 
-describe State do
+describe Automaton::State do
   before(:each) do
-    @state = State.new ['a', 'b']
+    @state = Automaton::State.new ['a', 'b']
   end
   
   describe "on instantiation" do
@@ -20,12 +21,12 @@ describe State do
     end
     
     it "should raise an exception if given a state that has a different alphabet" do
-      state_two = State.new ['a', 'b', 'c']
+      state_two = Automaton::State.new ['a', 'b', 'c']
       lambda { @state.change_transition('a', state_two) }.should raise_error RuntimeError, "States have uncompatible alphabets"
     end
     
     it "should successfully change transitions on valid arguments" do
-      state_two = State.new ['b', 'a']
+      state_two = Automaton::State.new ['b', 'a']
       @state.change_transition('b', state_two)
       @state.transition('b').should == state_two
     end

@@ -1,10 +1,11 @@
 # encoding: utf-8
+
 require 'finite_automaton'
 require 'state'
 
-describe FiniteAutomaton do
+describe Automaton::FiniteAutomaton do
   before(:each) do
-    @automaton = FiniteAutomaton.new
+    @automaton = Automaton::FiniteAutomaton.new
   end
   
   describe "on instantiation" do
@@ -13,7 +14,7 @@ describe FiniteAutomaton do
     end
     
     it "should have a custom alphabet if given explicitly on initialization" do
-      automaton = FiniteAutomaton.new(['a', 'b'])
+      automaton = Automaton::FiniteAutomaton.new(['a', 'b'])
       automaton.alphabet.should == Set.new(['a', 'b'])
     end
     
@@ -40,7 +41,7 @@ describe FiniteAutomaton do
     end
     
     it "should create one that inherits its alphabet from the automaton" do
-      @state.compatible_state?(State.new('a'..'z')).should be_true
+      @state.compatible_state?(Automaton::State.new('a'..'z')).should be_true
     end
     
     it "should create a reject state by default" do
@@ -69,14 +70,14 @@ describe FiniteAutomaton do
     end
     
     it "should not be changeable to a state that isn't present in the automaton" do
-      outside_state = State.new ['a', 'b']
+      outside_state = Automaton::State.new ['a', 'b']
       lambda { @automaton.start_state = outside_state }.should raise_error RuntimeError, "state not present in automaton"
     end 
   end
   
   describe "when marking accept states" do
     it "should not allow states that are not present in automaton" do
-      outside_state = State.new ['a', 'b']
+      outside_state = Automaton::State.new ['a', 'b']
       lambda { @automaton.mark_accept_state(outside_state)}.should raise_error RuntimeError, "state not present in automaton"
     end
     it "should work correctly on states present in automaton" do

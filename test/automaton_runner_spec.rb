@@ -1,11 +1,12 @@
 # encoding: utf-8
+
 require 'automaton_runner'
 require 'finite_automaton'
 
-describe AutomatonRunner do
+describe Automaton::AutomatonRunner do
   before(:each) do
-    @automaton = FiniteAutomaton.new ['a', 'b', 'c']
-    @runner = AutomatonRunner.new(@automaton)
+    @automaton = Automaton::FiniteAutomaton.new ['a', 'b', 'c']
+    @runner = Automaton::AutomatonRunner.new(@automaton)
   end
   
   describe "with incomplete automaton" do
@@ -52,10 +53,13 @@ describe AutomatonRunner do
     end
     
     it "should accept any string that finishes on accept state" do
+      @runner.run("").should be_true
+      @runner.run("bbbbbb").should be_true
       @runner.run("bbabaa").should be_true
     end
     
     it "should reject any string that finishes on reject state" do
+      @runner.run("a").should be_false
       @runner.run("bbabba").should be_false
     end
   end
