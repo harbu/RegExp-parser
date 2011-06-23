@@ -1,0 +1,2 @@
+This is a project I'm doing to learn Ruby. I want to create a simple regular
+expression parser that creates an equivalent NFA to match against given input.
