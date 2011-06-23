@@ -14,7 +14,7 @@ module Automaton
       if @automaton.start_state.nil?
         false
       else
-        traverse(string)
+        traverse(string, @automaton.start_state)
       end
     end
     
@@ -23,10 +23,15 @@ module Automaton
       string.chars.to_a.uniq.all? {|symbol| @automaton.compatible_symbol?(symbol) }
     end
     
-    def traverse(string)
-      state = @automaton.start_state
-      string.each_char {|symbol| state = state.transition(symbol) }
-      @automaton.accept_state?(state)
+    def traverse(string, state)
+      if string.empty?
+        @automaton.accept_state?(state)
+      else
+        symbol = string[0]
+        state.transition(symbol).find do |next_state|
+          traverse(string[1..-1], next_state)
+        end
+      end
     end
   end
 end

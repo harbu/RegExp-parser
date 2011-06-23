@@ -16,7 +16,7 @@ module Automaton
     end
     
     def add_state
-      @states << State.new(@alphabet)
+      @states << State.new(self)
       @start_state ||= @states.last
       @states.last
     end
@@ -36,7 +36,7 @@ module Automaton
     end
     
     def compatible_symbol?(symbol)
-      @alphabet.include?(symbol)
+      @alphabet.include?(symbol) || symbol == :epsilon
     end
     
   private
