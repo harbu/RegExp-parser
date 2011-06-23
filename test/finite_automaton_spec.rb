@@ -30,19 +30,25 @@ describe FiniteAutomaton do
     end
   end
   
-  describe "on adding state" do
-    it "should be found in the automaton's state list" do
-      state = @automaton.add_state
-      @automaton.states.should include(state)
+  describe "when adding state" do
+    before(:each) do
+      @state = @automaton.add_state
+    end
+    
+    it "should find new state in the automaton's state list" do
+      @automaton.states.should include(@state)
     end
     
     it "should create one that inherits its alphabet from the automaton" do
-      state = @automaton.add_state
-      state.compatible_state?(State.new('a'..'z')).should
+      @state.compatible_state?(State.new('a'..'z')).should be_true
+    end
+    
+    it "should create a reject state by default" do
+      @automaton.accept_state?(@state).should be_false
     end
   end
   
-  describe "start state" do
+  describe "contains a start state that" do
     before(:each) do
       @first_state = @automaton.add_state
     end
@@ -55,7 +61,6 @@ describe FiniteAutomaton do
       @automaton.add_state
       @automaton.start_state.should == @first_state
     end
-      
     
     it "should be changeable to any state present in the automaton" do
       states = 3.times.collect { @automaton.add_state }
@@ -67,5 +72,17 @@ describe FiniteAutomaton do
       outside_state = State.new ['a', 'b']
       lambda { @automaton.start_state = outside_state }.should raise_error RuntimeError, "state not present in automaton"
     end 
+  end
+  
+  describe "when marking accept states" do
+    it "should not allow states that are not present in automaton" do
+      outside_state = State.new ['a', 'b']
+      lambda { @automaton.mark_accept_state(outside_state)}.should raise_error RuntimeError, "state not present in automaton"
+    end
+    it "should work correctly on states present in automaton" do
+      state = @automaton.add_state
+      @automaton.mark_accept_state(state)
+      @automaton.accept_state?(state).should be_true
+    end
   end
 end

@@ -21,7 +21,25 @@ class FiniteAutomaton
   end
   
   def start_state=(state)
-    raise "state not present in automaton" unless @states.include?(state)
+    validate(state)
     @start_state = state
+  end
+  
+  def mark_accept_state(state)
+    validate(state)
+    @accept_states << state
+  end
+  
+  def accept_state?(state)
+    @accept_states.include?(state)
+  end
+  
+  def compatible_symbol?(symbol)
+    @alphabet.include?(symbol)
+  end
+  
+private
+  def validate(state)
+    raise "state not present in automaton" unless @states.include?(state)
   end
 end
