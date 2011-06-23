@@ -1,12 +1,12 @@
 # encoding: utf-8
-# Represents a deterministic finite automaton (DFA) capable of expressing all
+# Represents a nondeterministic finite automaton (NFA) capable of expressing all
 # regular languages.
 
 require 'set'
 require 'state'
 
 module Automaton
-  class FiniteAutomaton
+  class NondeterministicAutomaton
     attr_reader :states, :start_state, :accept_states, :alphabet
     
     def initialize(alphabet = ('a'..'z'))
