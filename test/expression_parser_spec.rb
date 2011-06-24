@@ -56,4 +56,9 @@ describe ExpressionParser do
       root.right.value.should == "b"
     end
   end
+  
+  describe "with nested expressions" do
+    it "should fail if paranthesis are unbalanced"
+    it "should work correctly on well-formed expressions"
+  end
 end
