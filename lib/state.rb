@@ -8,8 +8,7 @@ module Automaton
       @transitions = Hash.new {|hash, key| hash[key] = Set.new } 
     end
     
-    # TODO: Rename to monikko
-    def transition(symbol)
+    def transitions(symbol)
       @transitions[symbol]
     end
     

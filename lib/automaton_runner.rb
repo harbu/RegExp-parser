@@ -25,12 +25,22 @@ module Automaton
     
     def traverse(string, state)
       if string.empty?
-        @automaton.accept_state?(state)
+        if @automaton.accept_state?(state)
+          true
+        else
+          state.transitions(:epsilon).find do |next_state|
+            traverse(string, next_state)
+          end
+        end
       else
+        res1 = state.transitions(:epsilon).find do |next_state|
+          traverse(string, next_state)
+        end
         symbol = string[0]
-        state.transition(symbol).find do |next_state|
+        res2 = state.transitions(symbol).find do |next_state|
           traverse(string[1..-1], next_state)
         end
+        res1 || res2
       end
     end
   end

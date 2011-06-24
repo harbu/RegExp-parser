@@ -12,9 +12,9 @@ describe Automaton::State do
   
   describe "on instantiation" do
     it "should have no transitions defined" do
-      @state.transition('a').should be_empty
-      @state.transition('b').should be_empty
-      @state.transition(:epsilon).should be_empty
+      @state.transitions('a').should be_empty
+      @state.transitions('b').should be_empty
+      @state.transitions(:epsilon).should be_empty
     end
   end
 
@@ -33,12 +33,12 @@ describe Automaton::State do
       state_two = Automaton::State.new(@automaton)
       @state.add_transition('b', state_two)
       @state.add_transition('b', @state)
-      @state.transition('b').should == Set.new([@state, state_two])
+      @state.transitions('b').should == Set.new([@state, state_two])
     end
     
     it "should successfully add transition for epsilon symbol" do
       @state.add_transition(:epsilon, @state)
-      @state.transition(:epsilon).should == Set.new([@state])
+      @state.transitions(:epsilon).should == Set.new([@state])
     end
   end
 end
