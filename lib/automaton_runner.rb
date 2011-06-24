@@ -33,10 +33,10 @@ module Automaton
           end
         end
       else
+        symbol = string[0]
         res1 = state.transitions(:epsilon).find do |next_state|
           traverse(string, next_state)
         end
-        symbol = string[0]
         res2 = state.transitions(symbol).find do |next_state|
           traverse(string[1..-1], next_state)
         end
