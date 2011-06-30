@@ -4,6 +4,19 @@ require 'automaton_runner'
 require 'postfix_to_automaton'
 
 describe PostfixToAutomaton do
+  describe "with an invalid expression" do
+    it "should fail if expression contains too many operands" do
+      lambda { PostfixToAutomaton.new "ab" }.should raise_error, "unbalanced expression"
+      lambda { PostfixToAutomaton.new "abc." }.should raise_error, "unbalanced expression"
+    end
+    
+    it "should fail if expression contains too many operators" do
+      lambda { PostfixToAutomaton.new "*" }.should raise_error, "unbalanced expression"
+      lambda { PostfixToAutomaton.new "a|"}.should raise_error, "unbalanced expression"
+      lambda { PostfixToAutomaton.new "ab|*c.."}.should raise_error, "unbalanced expression"
+    end 
+  end
+  
   describe "with a simple expression" do
     it "should build a correct NFA when the expression is a single symbol" do
       converter = PostfixToAutomaton.new "a"
@@ -48,9 +61,12 @@ describe PostfixToAutomaton do
     end
     
     it "should build correct NFA for very complex expression" do
-      converter = PostfixToAutomaton.new "ab.cd|*.fg.h.i."
+      converter = PostfixToAutomaton.new "ab.cd|*.fg.h.i.."
       runner = Automaton::AutomatonRunner.new(converter.automaton)
+      runner.run("abfghi").should be_true
       runner.run("abcfghi").should be_true
+      runner.run("abdfghi").should be_true
+      runner.run("abdcfghi").should be_true
     end
   end
 end

@@ -31,6 +31,7 @@ private
       end
       stack.push(operand)
     end
+    raise "unbalanced expression" unless stack.size == 1
     stack.pop
   end
   
