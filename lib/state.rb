@@ -8,8 +8,8 @@ module Automaton
       @transitions = Hash.new {|hash, key| hash[key] = Set.new } 
     end
     
-    def transitions(symbol)
-      @transitions[symbol]
+    def transitions
+      @transitions
     end
     
     def add_transition(symbol, new_state)

@@ -82,4 +82,75 @@ describe Automaton::NondeterministicAutomaton do
       @automaton.accept_state?(state).should be_true
     end
   end
+  
+  describe "when importing states from another automaton" do
+    before(:each) do
+      @automaton = Automaton::NondeterministicAutomaton.new
+      states = 2.times.collect { @automaton.add_state }
+      states.first.add_transition('a', states.last)
+      @automaton.mark_accept_state(states.last)
+      
+      @original_start_state = states.first
+      @original_accept_states = Array.new(@automaton.accept_states)
+      
+      @other = Automaton::NondeterministicAutomaton.new
+      states = 4.times.collect { @other.add_state }
+      states[0].add_transition('a', states[1])
+      states[1].add_transition('a', states[2])
+      states[1].add_transition('b', states[3])
+      states[2].add_transition('a', states[0])
+      states[3].add_transition('a', states[0])
+      @other.mark_accept_state(states[2])
+      @other.mark_accept_state(states[3])
+      
+      @result = @automaton.import_states_from_automaton(@other)
+    end
+    
+    def check_built_correctly(start_state, automaton)
+      automaton.accept_state?(start_state).should be_false
+      start_state.transitions['b'].should be_empty
+      start_state.transitions['a'].length.should == 1
+      
+      state = start_state.transitions['a'].first
+      automaton.accept_state?(state).should be_false
+      state.transitions['a'].length.should == 1
+      state.transitions['b'].length.should == 1
+      
+      end_state_one = state.transitions['a'].first
+      end_state_one.transitions['b'].should be_empty
+      end_state_one.transitions['a'].length.should == 1
+      end_state_one.transitions['a'].first.should == start_state
+      
+      end_state_two = state.transitions['b'].first
+      end_state_two.transitions['b'].should be_empty
+      end_state_two.transitions['a'].length.should == 1
+      end_state_two.transitions['a'].first.should == start_state
+    end
+      
+    it "shouldn't modify the parameter" do
+      @other.states.length.should == 4
+      @other.accept_states.length.should == 2
+      check_built_correctly(@other.start_state, @other)
+    end
+    
+    it "should contain all the states that were present in the parameter" do
+      @other.states.each do |state|
+        @result[state].should_not be_nil
+      end
+    end
+    
+    it "should correctly build all the transitions that were present in the parameter" do
+      start_state = @result[@other.start_state]
+      check_built_correctly(start_state, @automaton)
+    end
+    
+    it "shouldn't change the start state" do
+      @automaton.start_state.should == @original_start_state
+    end
+    
+    it "shouldn't change the accept state list" do
+      @automaton.accept_states == @original_accept_states
+    end
+      
+  end
 end

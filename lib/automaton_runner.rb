@@ -28,16 +28,16 @@ module Automaton
         if @automaton.accept_state?(state)
           true
         else
-          state.transitions(:epsilon).find do |next_state|
+          state.transitions[:epsilon].find do |next_state|
             traverse(string, next_state)
           end
         end
       else
         symbol = string[0]
-        res1 = state.transitions(:epsilon).find do |next_state|
+        res1 = state.transitions[:epsilon].find do |next_state|
           traverse(string, next_state)
         end
-        res2 = state.transitions(symbol).find do |next_state|
+        res2 = state.transitions[symbol].find do |next_state|
           traverse(string[1..-1], next_state)
         end
         res1 || res2
