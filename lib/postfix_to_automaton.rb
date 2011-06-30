@@ -9,7 +9,7 @@ class PostfixToAutomaton
   
   def initialize(postfix)
     @postfix = postfix
-    build_automaton
+    @automaton = build_automaton
   end
 
 private
@@ -17,7 +17,7 @@ private
     stack = []
     
     @postfix.each_char do |char|
-      stack.push = case char
+      operand = case char
         when '*' then repetition(stack)
         when '.' then catenation(stack)
         when '|' then alternation(stack)
@@ -29,11 +29,12 @@ private
           automaton.mark_accept_state(end_state)
           automaton
       end
+      stack.push(operand)
     end
-    @automaton.mark_accept_state(state)
+    stack.pop
   end
   
-  def repetition(stack, state)
+  def repetition(stack)
     automaton = stack.pop
     old_start_state = automaton.start_state
     new_start_state = automaton.add_state
@@ -45,61 +46,34 @@ private
     automaton.accept_states.each do |end_state|
       end_state.add_transition(:epsilon, old_start_state)
     end
-  end
-  
-  def catenation(stack, state)
-    right_operand = stack.pop
-    left_operand = stack.pop
-    
-    middle_state = @automaton.add_state
-    last_state = @automaton.add_state
-    
-    state.add_transition(left_operand, middle_state)
-    middle_state.add_transition(right_operand, last_state)
-    last_state
-  end
-  
-  def alternation(stack, state)
-    right_operand = stack.pop
-    left_operand = stack.pop
-    
-    middle_states = 2.times.collect { @automaton.add_state }
-    last_state = @automaton.add_state
-    
-    state.add_transition(:epsilon, middle_states.first)
-    state.add_transition(:epsilon, middle_states.last)
-    middle_states.first.add_transition(left_operand, last_state)
-    middle_states.last.add_transition(right_operand, last_state)
-    last_state
-  end
-  
-  def automaton
-    automaton = Automaton::NondeterministicAutomaton.new
-    start_state = automaton.add_state
-    accept_state = automaton.add_state
-    automaton.mark_accept_state(accept_state)
-    
-    if @postfix.length == 1
-      start_state.add_transition(@postfix[0], accept_state)
-    elsif @postfix.length == 2
-      middle_state = automaton.add_state
-      start_state.add_transition(:epsilon, accept_state)
-      start_state.add_transition(@postfix[0], middle_state)
-      middle_state.add_transition(:epsilon, start_state)
-    elsif @postfix.length == 3
-      if @postfix[2] == "."
-        middle_state = automaton.add_state
-        start_state.add_transition(@postfix[0], middle_state)
-        middle_state.add_transition(@postfix[1], accept_state)
-      else
-        middle_state_one = automaton.add_state
-        middle_state_two = automaton.add_state
-        start_state.add_transition(:epsilon, middle_state_one)
-        start_state.add_transition(:epsilon, middle_state_two)
-        middle_state_one.add_transition(@postfix[0], accept_state)
-        middle_state_two.add_transition(@postfix[1], accept_state)
-      end
-    end
     automaton
+  end
+  
+  def catenation(stack)
+    automaton_one = stack.pop
+    automaton_two = stack.pop
+    equivalents = automaton_one.import_states_from_automaton(automaton_two)
+    
+    automaton_two.accept_states.each do |accept_state|
+      equivalents[accept_state].add_transition(:epsilon, automaton_one.start_state)
+    end
+    automaton_one.start_state = equivalents[automaton_two.start_state]
+    automaton_one
+  end
+  
+  def alternation(stack)
+    automaton_one = stack.pop
+    automaton_two = stack.pop
+    equivalents = automaton_one.import_states_from_automaton(automaton_two)
+    
+    automaton_two.accept_states.each do |accept_state|
+      automaton_one.mark_accept_state(equivalents[accept_state])
+    end
+    
+    new_start_state = automaton_one.add_state
+    new_start_state.add_transition(:epsilon, automaton_one.start_state)  
+    new_start_state.add_transition(:epsilon, equivalents[automaton_two.start_state])
+    automaton_one.start_state = new_start_state
+    automaton_one
   end
 end

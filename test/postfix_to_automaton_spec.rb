@@ -1,72 +1,56 @@
 # encoding: utf-8
 
+require 'automaton_runner'
 require 'postfix_to_automaton'
 
 describe PostfixToAutomaton do
   describe "with a simple expression" do
-    it "should build a NFA correctly when the expression is a single symbol" do
+    it "should build a correct NFA when the expression is a single symbol" do
       converter = PostfixToAutomaton.new "a"
-      automaton = converter.automaton
-      start_state = automaton.start_state
-      accept_state = start_state.transitions('a').first
-      
-      automaton.states.size.should == 2
-      automaton.accept_state?(start_state).should be_false
-      automaton.accept_state?(accept_state).should be_true
+      runner = Automaton::AutomatonRunner.new(converter.automaton)
+      runner.run("").should be_false
+      runner.run("b").should be_false
+      runner.run("a").should be_true
     end
     
-    it "should build a NFA correctly when the expression is a repetition" do
+    it "should build a correct NFA when the expression is a repetition" do
       converter = PostfixToAutomaton.new "a*"
-      automaton = converter.automaton
-      start_state = automaton.start_state
-      repeat_state = start_state.transitions('a').first
-      accept_state = start_state.transitions(:epsilon).first
-      
-      automaton.states.size.should == 3
-      automaton.accept_state?(start_state).should be_false
-      automaton.accept_state?(repeat_state).should be_false
-      automaton.accept_state?(accept_state).should be_true
-      repeat_state.transitions(:epsilon).first.should == start_state
-    end
-      
-    it "should build a NFA correctly when the expression is a single catenation" do
-      converter = PostfixToAutomaton.new "ab."
-      automaton = converter.automaton
-      start_state = automaton.start_state
-      second_state = start_state.transitions('a').first
-      last_state = second_state.transitions('b').first
-      
-      automaton.states.size.should == 3
-      automaton.accept_state?(start_state).should be_false
-      automaton.accept_state?(second_state).should be_false
-      automaton.accept_state?(last_state).should be_true
+      runner = Automaton::AutomatonRunner.new(converter.automaton)
+      runner.run("c").should be_false
+      3.times {|num| runner.run("a" * num).should be_true }
     end
     
-    it "should build a NFA correctly when the expression is a single alternation" do
+    it "should a correct NFA when the expression is a single catenation" do
+      converter = PostfixToAutomaton.new "ab."
+      runner = Automaton::AutomatonRunner.new(converter.automaton)
+      runner.run("a").should be_false
+      runner.run("abb").should be_false
+      runner.run("ab").should be_true
+    end
+    
+    it "should a correct NFA when the expression is a single alternation" do
       converter = PostfixToAutomaton.new "ab|"
-      automaton = converter.automaton
-      start_state = automaton.start_state
-      middle_states = automaton.start_state.transitions(:epsilon).to_a
-      if middle_states[0].transitions('a').empty?
-        last_state_one = middle_states[0].transitions('b').first
-        last_state_two = middle_states[1].transitions('a').first
-      else
-        last_state_one = middle_states[0].transitions('a').first
-        last_state_two = middle_states[1].transitions('b').first
-      end
-      
-      automaton.states.size.should == 4
-      automaton.accept_state?(start_state).should be_false
-      automaton.accept_state?(middle_states[0]).should be_false
-      automaton.accept_state?(middle_states[1]).should be_false
-      automaton.accept_state?(last_state_one).should be_true
-      last_state_one.should == last_state_two
-    end 
+      runner = Automaton::AutomatonRunner.new(converter.automaton)
+      runner.run("").should be_false
+      runner.run("c").should be_false
+      runner.run("ab").should be_false
+      runner.run("a").should be_true
+      runner.run("b").should be_true
+    end    
   end
   
   describe "with a compound expression" do
-    it "should build a NFA correctly when the expression is three joined catenation operations" do
-      converter = PostfixToAutomaton.new "abc.."
+    it "should build correct NFA when the expression contains three different operations" do
+      converter = PostfixToAutomaton.new "ab.c*|"
+      runner = Automaton::AutomatonRunner.new(converter.automaton)
+      3.times {|num| runner.run("c" * num).should be_true }
+      runner.run("ab").should be_true
+    end
+    
+    it "should build correct NFA for very complex expression" do
+      converter = PostfixToAutomaton.new "ab.cd|*.fg.h.i."
+      runner = Automaton::AutomatonRunner.new(converter.automaton)
+      runner.run("abcfghi").should be_true
     end
   end
 end
