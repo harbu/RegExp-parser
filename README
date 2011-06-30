@@ -1,2 +1,8 @@
 This is a project I'm doing to learn Ruby. I want to create a simple regular
 expression parser that creates an equivalent NFA to match against given input.
+
+Some sources I used for this project:
+Sipser, M., Introduction to the Theory of Computation, 2nd edition, 2006
+http://swtch.com/~rsc/regexp/regexp1.html
+http://scriptasylum.com/tutorials/infix_postfix/algorithms/infix-postfix/index.htm
+http://en.wikipedia.org/wiki/Shunting_yard_algorithm
