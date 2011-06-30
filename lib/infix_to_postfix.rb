@@ -1,6 +1,6 @@
 # encoding: utf-8
 # Converts given infix regular expression to postfix form so that it can easily
-# be interpreted by a computer. Implementing using the Shunting-yard algorithm.
+# be interpreted by a computer. Implemented with the Shunting-yard algorithm.
 
 class InfixToPostfix
   
