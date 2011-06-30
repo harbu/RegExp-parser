@@ -16,7 +16,10 @@ class InfixToPostfix
         end
         stack.push(char)
       elsif char == ')'
-        postfix += stack.pop until stack.last == '('
+        until stack.last == '('
+          raise "mismatched paranthesis" if stack.empty? 
+          postfix += stack.pop
+        end
         stack.pop
       elsif char == '('
         stack.push(char)
@@ -24,7 +27,10 @@ class InfixToPostfix
         postfix += char
       end
     end
-    postfix += stack.pop until stack.empty?
+      until stack.empty?
+        raise "mismatched paranthesis" if stack.last =~ /[\)\(]/
+        postfix += stack.pop
+      end
     postfix
   end
 end
