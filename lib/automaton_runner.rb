@@ -8,9 +8,6 @@ module Automaton
     end
     
     def run(string)
-      unless string_compatible?(string)
-        raise "string contains symbols not present in automata's alphabet"
-      end
       if @automaton.start_state.nil?
         false
       else

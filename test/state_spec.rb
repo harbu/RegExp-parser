@@ -6,7 +6,7 @@ require 'state'
 
 describe Automaton::State do
   before(:each) do
-    @automaton = Automaton::FiniteAutomaton.new ['a', 'b']
+    @automaton = Automaton::FiniteAutomaton.new
     @state = Automaton::State.new(@automaton)
   end
   
@@ -19,12 +19,8 @@ describe Automaton::State do
   end
 
   describe "when adding transitions" do
-    it "should not allow adding symbols that don't belong to its alphabet" do
-      lambda { @state.add_transition('c', @state) }.should raise_error RuntimeError, "Symbol not in state's alphabet"
-    end
-    
     it "should not allow linking to a state using a different automaton" do
-      automaton_two = Automaton::FiniteAutomaton.new ['a', 'b']
+      automaton_two = Automaton::FiniteAutomaton.new
       state_two = Automaton::State.new(automaton_two)
       lambda { @state.add_transition('a', state_two) }.should raise_error RuntimeError, "States have different automata"
     end

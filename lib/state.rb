@@ -13,7 +13,6 @@ module Automaton
     end
     
     def add_transition(symbol, new_state)
-      raise "Symbol not in state's alphabet" unless @automaton.compatible_symbol?(symbol)
       raise "States have different automata" unless compatible_state?(new_state)
       @transitions[symbol] << new_state
     end

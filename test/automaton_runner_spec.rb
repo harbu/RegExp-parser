@@ -5,16 +5,11 @@ require 'finite_automaton'
 
 describe Automaton::AutomatonRunner do
   before(:each) do
-    @automaton = Automaton::FiniteAutomaton.new ['a', 'b']
+    @automaton = Automaton::FiniteAutomaton.new
     @runner = Automaton::AutomatonRunner.new(@automaton)
   end
   
   describe "with incomplete automaton" do
-    it "should throw exception if string contains uncompatible symbols" do
-      lambda { @runner.run("abcba") }.should raise_error RuntimeError,
-          "string contains symbols not present in automata's alphabet"
-    end
-    
     it "should reject if no states" do
       @runner.run("abba").should be_false
     end

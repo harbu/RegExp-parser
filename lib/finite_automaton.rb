@@ -7,10 +7,9 @@ require 'state'
 
 module Automaton
   class FiniteAutomaton
-    attr_reader :states, :start_state, :accept_states, :alphabet
+    attr_reader :states, :start_state, :accept_states
     
-    def initialize(alphabet = ('a'..'z'))
-      @alphabet = Set.new(alphabet)
+    def initialize
       @states = []
       @accept_states = []
     end
@@ -33,10 +32,6 @@ module Automaton
     
     def accept_state?(state)
       @accept_states.include?(state)
-    end
-    
-    def compatible_symbol?(symbol)
-      @alphabet.include?(symbol) || symbol == :epsilon
     end
     
     def import_states_from_automaton(automaton)

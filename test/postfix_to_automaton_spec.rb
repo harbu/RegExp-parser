@@ -18,6 +18,9 @@ describe PostfixToAutomaton do
   end
   
   describe "with a simple expression" do
+    it "should build an empty NFA when the expression is empty"
+    it "should build a NFA that only accepts empty string when the expression is an epsilon symbol"
+    
     it "should build a correct NFA when the expression is a single symbol" do
       converter = PostfixToAutomaton.new "a"
       runner = Automaton::AutomatonRunner.new(converter.automaton)

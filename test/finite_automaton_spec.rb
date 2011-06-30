@@ -9,15 +9,6 @@ describe Automaton::FiniteAutomaton do
   end
   
   describe "on instantiation" do
-    it "should have by default the English alphabet as its alphabet" do
-      @automaton.alphabet.should == Set.new('a'..'z')
-    end
-    
-    it "should have a custom alphabet if given explicitly on initialization" do
-      automaton = Automaton::FiniteAutomaton.new(['a', 'b'])
-      automaton.alphabet.should == Set.new(['a', 'b'])
-    end
-    
     it "should have an empty set of states" do
       @automaton.states.should be_empty
     end
