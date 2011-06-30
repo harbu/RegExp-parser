@@ -28,6 +28,18 @@ describe InfixToPostfix do
       InfixToPostfix.convert("a.b").should == "ab."
     end
     
+    it "should obay precedence rules" do
+      InfixToPostfix.convert("a|b.c|d").should == "abc.|d|"
+      InfixToPostfix.convert("a.b*").should == "ab*."
+      InfixToPostfix.convert("a|b*").should == "ab*|"
+    end
+    
+    it "should allow overriding precedence rules by paranthesis" do
+      InfixToPostfix.convert("(a|b).(c|d)").should == "ab|cd|."
+      InfixToPostfix.convert("(a.b)*").should == "ab.*"
+      InfixToPostfix.convert("(a|b)*").should == "ab|*"
+    end
+    
     it "should return the postfix equivalent of a compound, complex expression" do
       InfixToPostfix.convert("((((a.b)|(c.d))*).(e|f))").should == "ab.cd.|*ef|."
     end
