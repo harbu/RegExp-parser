@@ -1,12 +1,12 @@
 # encoding: utf-8
 
-require 'nondeterministic_automaton'
+require 'finite_automaton'
 require 'set'
 require 'state'
 
 describe Automaton::State do
   before(:each) do
-    @automaton = Automaton::NondeterministicAutomaton.new ['a', 'b']
+    @automaton = Automaton::FiniteAutomaton.new ['a', 'b']
     @state = Automaton::State.new(@automaton)
   end
   
@@ -24,7 +24,7 @@ describe Automaton::State do
     end
     
     it "should not allow linking to a state using a different automaton" do
-      automaton_two = Automaton::NondeterministicAutomaton.new ['a', 'b']
+      automaton_two = Automaton::FiniteAutomaton.new ['a', 'b']
       state_two = Automaton::State.new(automaton_two)
       lambda { @state.add_transition('a', state_two) }.should raise_error RuntimeError, "States have different automata"
     end

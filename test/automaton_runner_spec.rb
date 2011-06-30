@@ -1,11 +1,11 @@
 # encoding: utf-8
 
 require 'automaton_runner'
-require 'nondeterministic_automaton'
+require 'finite_automaton'
 
 describe Automaton::AutomatonRunner do
   before(:each) do
-    @automaton = Automaton::NondeterministicAutomaton.new ['a', 'b']
+    @automaton = Automaton::FiniteAutomaton.new ['a', 'b']
     @runner = Automaton::AutomatonRunner.new(@automaton)
   end
   

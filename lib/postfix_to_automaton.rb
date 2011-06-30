@@ -1,8 +1,7 @@
 # encoding: utf-8
-# Builds a nondeterministic finite automaton (NFA) from the given regular
-# expression, which is in postfix format.
+# Builds finite automata from postfix regular expressions
 
-require 'nondeterministic_automaton'
+require 'finite_automaton'
 
 class PostfixToAutomaton
   attr_reader :automaton
@@ -22,7 +21,7 @@ private
         when '.' then catenation(stack)
         when '|' then alternation(stack)
         else
-          automaton = Automaton::NondeterministicAutomaton.new
+          automaton = Automaton::FiniteAutomaton.new
           start_state = automaton.add_state
           end_state = automaton.add_state
           start_state.add_transition(char, end_state)
