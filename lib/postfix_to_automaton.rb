@@ -13,20 +13,13 @@ class PostfixToAutomaton
 
 private
   def build_automaton
-    stack = []
-    
+    stack = [] 
     @postfix.each_char do |char|
       operand = case char
         when '*' then repetition(stack)
         when '.' then catenation(stack)
         when '|' then alternation(stack)
-        else
-          automaton = Automaton::FiniteAutomaton.new
-          start_state = automaton.add_state
-          end_state = automaton.add_state
-          start_state.add_transition(char, end_state)
-          automaton.mark_accept_state(end_state)
-          automaton
+        else symbol(char)
       end
       stack.push(operand)
     end
@@ -75,5 +68,14 @@ private
     new_start_state.add_transition(:epsilon, equivalents[automaton_two.start_state])
     automaton_one.start_state = new_start_state
     automaton_one
+  end
+  
+  def symbol(char)
+    automaton = Automaton::FiniteAutomaton.new
+    start_state = automaton.add_state
+    end_state = automaton.add_state
+    start_state.add_transition(char, end_state)
+    automaton.mark_accept_state(end_state)
+    automaton
   end
 end
