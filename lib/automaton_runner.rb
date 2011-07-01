@@ -18,11 +18,7 @@ module Automaton
   private
     def traverse(string, state)
       if string.empty?
-        if @automaton.accept_state?(state)
-          true
-        else
-          traverse_epsilon(string, state)
-        end
+        @automaton.accept_state?(state) || traverse_epsilon(string, state)
       else
         traverse_symbol(string, state) || traverse_epsilon(string, state)
       end
@@ -30,7 +26,7 @@ module Automaton
     
     def traverse_symbol(string, state)
       symbol = string[0]
-      res = state.transitions[symbol].find do |next_state|
+      state.transitions[symbol].find do |next_state|
         traverse(string[1..-1], next_state)
       end
     end

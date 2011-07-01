@@ -48,13 +48,18 @@ module Automaton
     def copy_states(state)
       if !@visited[state]
         @visited[state] = self.add_state
-        state.transitions.each do |symbol, target_states|
-          target_states.each do |target_state|
-            @visited[state].add_transition(symbol, copy_states(target_state))
-          end
-        end
+        copy_transitions(state)
       end
       @visited[state]
+    end
+    
+    def copy_transitions(mirror_state)
+      state = @visited[mirror_state]
+      mirror_state.transitions.each do |symbol, end_states|
+        end_states.each do |end_state|
+          state.add_transition(symbol, copy_states(end_state))
+        end
+      end
     end
   end
 end
