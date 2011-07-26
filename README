@@ -1,8 +1,24 @@
+SUMMARY
+--------------------------------------------------------------------------------
 This is a project I'm doing to learn Ruby. I want to create a simple regular
 expression parser that creates an equivalent NFA to match against given input.
 
-Some sources I used for this project:
-Sipser, M., Introduction to the Theory of Computation, 2nd edition, 2006
-http://swtch.com/~rsc/regexp/regexp1.html
-http://scriptasylum.com/tutorials/infix_postfix/algorithms/infix-postfix/index.htm
-http://en.wikipedia.org/wiki/Shunting_yard_algorithm
+HOW IT WORKS?
+--------------------------------------------------------------------------------
+(1) Given a regular expression pattern in infix form, "InfixToPostfix" converts
+it into postfix form using the Shunting-yard algorithm.
+
+(2) The postfix pattern is then easily converted into a nondeterministic
+finite automaton (NFA) by the "PostfixToAutomaton"-class, which uses conversions
+described in the sources [1,2].
+
+(3) A given string can then be matched against the NFA by "AutomatonRunner".
+
+
+
+SOURCES
+--------------------------------------------------------------------------------
+[1] Sipser, M., Introduction to the Theory of Computation, 2nd edition, 2006
+[2] http://swtch.com/~rsc/regexp/regexp1.html
+[3] http://scriptasylum.com/tutorials/infix_postfix/algorithms/infix-postfix/index.htm
+[4] http://en.wikipedia.org/wiki/Shunting_yard_algorithm
