@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__) + "/../lib"
+require 'automaton_runner'
+require 'postfix_to_automaton'
+require 'infix_to_postfix'
+
+puts "--------------------------"
+puts "Regular Expression Matcher"
+puts "--------------------------"
+puts "Please input a pattern"
+
+converter = PostfixToAutomaton.new(InfixToPostfix.convert(gets.chomp))
+runner = Automaton::AutomatonRunner.new(converter.automaton)
+
+puts "Please input strings to match against (EOF to quit)"
+while line = gets
+  puts runner.run(line.chomp) ? "true" : "false"
+end
+
